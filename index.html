@@ -1,0 +1,163 @@
+<!--
+    Ralph Philip M. Caoile
+    2021-06978
+    CMSC 161 - Term Project
+-->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Oiia Oiia Cat</title>
+    <style>
+        body {
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 30px;
+            margin: 0;
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+        }
+        #controls {
+            width: 500px;
+            display: flex;
+            gap: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            user-select: none;
+        }
+        .ctrl-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+        #controls fieldset {
+            border: 1px solid #333;
+            border-radius: 4px;
+            padding: 8px 10px;
+            margin-bottom: 0;
+        }
+        #controls input[type="range"] {
+            width: 78px;
+        }
+        #controls span.val {
+            display: inline-block;
+            width: 36px;
+            text-align: right;
+            font-size: 11px;
+            color: #aaa;
+        }
+        #controls label.chk {
+            font-size: 11px;
+            color: #888;
+        }
+        #controls button {
+            width: 100%;
+            padding: 6px 0;
+            margin-top: 4px;
+            background: #2a3a5a;
+            color: #cce;
+            border: 1px solid #445;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        #controls button:hover {
+            background: #3a4a7a;
+        }
+        #animStatus {
+            font-size: 11px;
+            color: #88aacc;
+            margin-top: 3px;
+            text-align: center;
+        }
+        canvas {
+            border-radius: 4px;
+        }
+    </style>
+    <script src="./utils/gl-matrix.js"></script>
+    <script src="utils/textures.js"></script>
+    <script src="utils/shadows.js"></script>
+</head>
+<body>
+    <canvas id="output" width="720" height="720"></canvas>
+
+    <div id="controls">
+        <div class="ctrl-col">
+            <fieldset>
+                <legend>Camera</legend>
+                <label class="chk">Eye Position</label>
+                X = <input type="range" id="eyeX" min="-15" max="15" value="-1.1"   step="0.1">
+                <span class="val" id="eyeXVal">-1.1</span><br><br>
+                Y = <input type="range" id="eyeY" min="-15" max="15" value="0.7"   step="0.1">
+                <span class="val" id="eyeYVal">0.7</span><br><br>
+                Z = <input type="range" id="eyeZ" min="-15" max="15" value="3.1" step="0.1">
+                <span class="val" id="eyeZVal">3.1</span><br><br>
+
+                <label class="chk">Center / Look-At Point</label>
+                X = <input type="range" id="centerX" min="-5" max="5" value="0" step="0.1">
+                <span class="val" id="centerXVal">0.0</span><br><br>
+                Y = <input type="range" id="centerY" min="-5" max="5" value="0" step="0.1">
+                <span class="val" id="centerYVal">0.0</span><br><br>
+                Z = <input type="range" id="centerZ" min="-5" max="5" value="0" step="0.1">
+                <span class="val" id="centerZVal">0.0</span><br><br>
+
+                <label class="chk">Up Vector</label>
+                X = <input type="range" id="upX" min="-1" max="1" value="0" step="0.1">
+                <span class="val" id="upXVal">0.0</span><br>
+                Y = <input type="range" id="upY" min="-1" max="1" value="1" step="0.1">
+                <span class="val" id="upYVal">1.0</span><br>
+                Z = <input type="range" id="upZ" min="-1" max="1" value="0" step="0.1">
+                <span class="val" id="upZVal">0.0</span>
+            </fieldset>
+
+            <fieldset>
+                <legend>Cat</legend>
+                <button id="btnToggleAnim">Toggle Animation (or click canvas)</button>
+                <div id="animStatus">Animation: OFF</div><br>
+                <label class="chk">Cat Position</label>
+                X = <input type="range" id="catX" min="-4" max="4" value="0"   step="0.1">
+                <span class="val" id="catXVal">0.0</span><br>
+                Y = <input type="range" id="catY" min="-3" max="5" value="0"   step="0.1">
+                <span class="val" id="catYVal">0.0</span><br>
+                Z = <input type="range" id="catZ" min="-4" max="4" value="0"   step="0.1">
+                <span class="val" id="catZVal">0.0</span><br><br>
+            </fieldset>
+        </div>
+        <div class="ctrl-col">
+            <fieldset>
+                <legend>Light</legend>
+                <label class="chk">Position</label>
+                X = <input type="range" id="lightX" min="-10" max="10" value="3.0" step="0.1">
+                <span class="val" id="lightXVal">3.0</span><br><br>
+                Y = <input type="range" id="lightY" min="-10" max="10" value="5.0" step="0.1">
+                <span class="val" id="lightYVal">5.0</span><br><br>
+                Z = <input type="range" id="lightZ" min="-10" max="10" value="5.0" step="0.1">
+                <span class="val" id="lightZVal">5.0</span><br><br>
+
+                <label class="chk">Color</label>
+                R = <input type="range" id="lightR" min="0" max="1" value="1.0" step="0.05">
+                <span class="val" id="lightRVal">1.0</span><br><br>
+                G = <input type="range" id="lightG" min="0" max="1" value="1.0" step="0.05">
+                <span class="val" id="lightGVal">1.0</span><br><br>
+                B = <input type="range" id="lightB" min="0" max="1" value="1.0" step="0.05">
+                <span class="val" id="lightBVal">1.0</span>
+            </fieldset>
+
+            <fieldset>
+                <legend>Shadows</legend>
+                <label class="chk"><input type="checkbox" id="chkShadows" checked> Enable Shadows</label>
+            </fieldset>
+
+        </div>
+    </div>
+
+    <script src="utils/controls.js"></script>
+    <script src="utils/lighting.js"></script>
+    <script src="utils/objects.js"></script>
+    <script src="utils/scene.js"></script>
+    <script src="utils/main.js"></script>
+</body>
+</html>
