@@ -1,7 +1,7 @@
 # CMSC 161: Term Project — Cat Play Area
 
 **Author:** Ralph Philip M. Caoile  
-**Course:** CMSC 161 — Interactive Computer Graphics (2nd Semester, AY 2025-2026)
+**Course:** CMSC 161 — Interactive Computer Graphics
 
 ---
 
