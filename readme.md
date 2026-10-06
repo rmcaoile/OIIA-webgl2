@@ -3,6 +3,9 @@
 **Author:** Ralph Philip M. Caoile  
 **Course:** CMSC 161 — Interactive Computer Graphics
 
+## Live Demo
+[https://oiia-oiia-rmc.vercel.app/](https://oiia-oiia-rmc.vercel.app/)
+
 ---
 
 ## Short Description
@@ -26,9 +29,7 @@ The project demonstrates all core CMSC 161 topics in one cohesive scene:
 
 ---
 
-## How to Use
-
-### Running the Application
+## Running the Application Locally
 1. To see the textures:
 Run
 ```bash
