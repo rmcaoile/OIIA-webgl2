@@ -3,10 +3,9 @@
 **Author:** Ralph Philip M. Caoile  
 **Course:** CMSC 161 — Interactive Computer Graphics
 
-## Live Demo
+### Live Demo
 [https://oiia-oiia-rmc.vercel.app/](https://oiia-oiia-rmc.vercel.app/)
 
----
 
 ## Short Description
 
@@ -27,7 +26,6 @@ The project demonstrates all core CMSC 161 topics in one cohesive scene:
 - Extensive user interaction: mouse orbit/pan/zoom camera, click-to-toggle cat animation, sliders for camera/light/cat position, toggles
 
 
----
 
 ## Running the Application Locally
 1. To see the textures:
