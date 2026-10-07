@@ -431,7 +431,7 @@ function setupUIControls() {
 
     function syncCatSliders() {
         if (catXEl) { _sliderVal('catX').textContent = parseFloat(catXEl.value).toFixed(1); scene.catRoot.translate[0] = parseFloat(catXEl.value); }
-        if (catYEl) { _sliderVal('catY').textContent = parseFloat(catYEl.value).toFixed(1); scene.catRoot.translate[1] = parseFloat(catYEl.value); }
+        if (catYEl) { _sliderVal('catY').textContent = parseFloat(catYEl.value).toFixed(1); scene.animation.catBaseY = parseFloat(catYEl.value); }
         if (catZEl) { _sliderVal('catZ').textContent = parseFloat(catZEl.value).toFixed(1); scene.catRoot.translate[2] = parseFloat(catZEl.value); }
     }
 

@@ -24,6 +24,7 @@ animation: {
         headFreq:   3.5,
         bobAmp:     0.08,
         bobFreq:    4.0,
+        catBaseY:   0,
         bodyBaseScale: [0.52, 0.74, 0.44],
     },
     defaultPose: {
@@ -84,7 +85,8 @@ function updateCatAnimation(deltaTime) {
     scene.cat.head.rotate[1] = anim.headAngle;
 
     // Vertical bobbing
-    scene.catRoot.translate[1] = anim.bobAmp * (0.5 + 0.5 * Math.sin(2 * Math.PI * anim.bobFreq * anim.time));
+    const bobOffset = anim.bobAmp * (0.5 + 0.5 * Math.sin(2 * Math.PI * anim.bobFreq * anim.time));
+    scene.catRoot.translate[1] = anim.catBaseY + bobOffset;
     
     // Sync Y slider
     if (window.updateCatYSlider) window.updateCatYSlider(scene.catRoot.translate[1]);
@@ -109,7 +111,7 @@ function resetCatPose() {
 
     scene.catRoot.rotate[1] = def.rootRotationY;
     scene.cat.head.rotate[1] = def.headRotationY;
-    scene.catRoot.translate[1] = 0;
+    scene.catRoot.translate[1] = anim.catBaseY;
 
     const baseScale = anim.bodyBaseScale;
     scene.cat.body.scale[0] = baseScale[0];
