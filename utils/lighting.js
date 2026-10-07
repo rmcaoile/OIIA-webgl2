@@ -3,8 +3,14 @@ const LIGHT_PROPERTIES = {
     color:    [1.0, 0.95, 0.8, 1.0],
 };
 
+const LIGHT_DEFAULTS = {
+    color: [1.0, 0.95, 0.8, 1.0],
+};
+
 let _lightingProgram = null;
 let _controlsInstalled = false;
+let _lightAnimating = false;
+let _lightAnimTime = 0;
 
 // Compute normal matrix = transpose(inverse(model))
 function normalMatrixFrom(modelMatrix) {
@@ -68,7 +74,57 @@ function setupLightingSliders() {
         el.addEventListener('input', () => {
             const v = parseFloat(el.value);
             LIGHT_PROPERTIES.color[i] = v;
+            LIGHT_DEFAULTS.color[i] = v;
             if (val) val.textContent = v.toFixed(2);
         });
     });
 }
+
+function updateLightColorAnimation(deltaTime) {
+    if (!_lightAnimating) return;
+    
+    _lightAnimTime += deltaTime;
+    
+    const t = _lightAnimTime;
+    LIGHT_PROPERTIES.color[0] = 0.5 + 0.5 * Math.sin(t * 2.0);
+    LIGHT_PROPERTIES.color[1] = 0.5 + 0.5 * Math.sin(t * 2.5 + 2.0);
+    LIGHT_PROPERTIES.color[2] = 0.5 + 0.5 * Math.sin(t * 3.0 + 4.0);
+    
+    updateLightColorSliders();
+}
+
+function updateLightColorSliders() {
+    const colIds = ['lightR', 'lightG', 'lightB'];
+    colIds.forEach((id, i) => {
+        const el = document.getElementById(id);
+        const val = document.getElementById(id + 'Val');
+        if (el) el.value = LIGHT_PROPERTIES.color[i].toFixed(2);
+        if (val) val.textContent = LIGHT_PROPERTIES.color[i].toFixed(2);
+    });
+}
+
+function setLightAnimation(enabled) {
+    _lightAnimating = enabled;
+    if (!enabled) {
+        LIGHT_PROPERTIES.color[0] = LIGHT_DEFAULTS.color[0];
+        LIGHT_PROPERTIES.color[1] = LIGHT_DEFAULTS.color[1];
+        LIGHT_PROPERTIES.color[2] = LIGHT_DEFAULTS.color[2];
+        _lightAnimTime = 0;
+        updateLightColorSliders();
+    } else {
+        LIGHT_PROPERTIES.color[0] = 1.0;
+        LIGHT_PROPERTIES.color[1] = 0.0;
+        LIGHT_PROPERTIES.color[2] = 1.0;
+        updateLightColorSliders();
+    }
+}
+
+Object.assign(window, {
+    LIGHT_PROPERTIES,
+    LIGHT_DEFAULTS,
+    setupLightingUniforms,
+    setLightingProgram,
+    setupLightingSliders,
+    updateLightColorAnimation,
+    setLightAnimation,
+});

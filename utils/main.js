@@ -446,10 +446,16 @@ function setupUIControls() {
     function updateAnimStatus() {
         if (animSpan) animSpan.textContent = 'Animation: ' + (scene.animation.isAnimating ? 'ON' : 'OFF');
     }
-    if (btnAnim) {
-        btnAnim.addEventListener('click', () => { toggleCatAnimation(); updateAnimStatus(); });
+    function toggleAnimAndLight() {
+        const isNow = toggleCatAnimation();
+        if (window.setLightAnimation) window.setLightAnimation(isNow);
+        updateAnimStatus();
+        return isNow;
     }
-    canvas.addEventListener('click', updateAnimStatus);
+    if (btnAnim) {
+        btnAnim.addEventListener('click', toggleAnimAndLight);
+    }
+    canvas.addEventListener('click', toggleAnimAndLight);
 
     const chkShadows = document.getElementById('chkShadows');
     if (chkShadows) {
@@ -502,11 +508,6 @@ async function init() {
     setupUIControls();
     setupLightingSliders();
 
-    canvas.addEventListener('click', () => {
-        const isNow = toggleCatAnimation();
-        console.log('Animation:', isNow ? 'ON' : 'OFF');
-    });
-
     gl.clearColor(0.12, 0.16, 0.22, 1.0);
     gl.enable(gl.DEPTH_TEST);
     gl.depthFunc(gl.LESS);
@@ -523,6 +524,7 @@ function render(now) {
     lastTime = now;
 
     updateCatAnimation(deltaTime);
+    if (window.updateLightColorAnimation) window.updateLightColorAnimation(deltaTime);
 
     const lightPos = LIGHT_PROPERTIES.position.slice(0, 3);
     if (window.updateLightSpaceMatrices) window.updateLightSpaceMatrices(lightPos);
