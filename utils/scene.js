@@ -15,13 +15,15 @@ const scene = {
         pawBL: { translate: [-0.20, 0.045, -0.26], scale: [0.13, 0.09, 0.13], rotate: [0, 0, 0] },
         pawBR: { translate: [ 0.20, 0.045, -0.26], scale: [0.13, 0.09, 0.13], rotate: [0, 0, 0] },
     },
-    animation: {
+animation: {
         time:       0,
         isAnimating: false,
-        spinSpeed: 3.0,
-        spinAngle: 0,
-        headAmp:  12,
-        headFreq:  3.5,
+        spinSpeed:  3.0,
+        spinAngle:  0,
+        headAmp:    12,
+        headFreq:   3.5,
+        bobAmp:     0.08,
+        bobFreq:    4.0,
         bodyBaseScale: [0.52, 0.74, 0.44],
     },
     defaultPose: {
@@ -80,6 +82,12 @@ function updateCatAnimation(deltaTime) {
 
     anim.headAngle = anim.headAmp * Math.sin(2 * Math.PI * anim.headFreq * anim.time);
     scene.cat.head.rotate[1] = anim.headAngle;
+
+    // Vertical bobbing
+    scene.catRoot.translate[1] = anim.bobAmp * (0.5 + 0.5 * Math.sin(2 * Math.PI * anim.bobFreq * anim.time));
+    
+    // Sync Y slider
+    if (window.updateCatYSlider) window.updateCatYSlider(scene.catRoot.translate[1]);
 }
 
 // Toggle cat animation on/off
@@ -101,6 +109,7 @@ function resetCatPose() {
 
     scene.catRoot.rotate[1] = def.rootRotationY;
     scene.cat.head.rotate[1] = def.headRotationY;
+    scene.catRoot.translate[1] = 0;
 
     const baseScale = anim.bodyBaseScale;
     scene.cat.body.scale[0] = baseScale[0];

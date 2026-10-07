@@ -435,6 +435,12 @@ function setupUIControls() {
         if (catZEl) { _sliderVal('catZ').textContent = parseFloat(catZEl.value).toFixed(1); scene.catRoot.translate[2] = parseFloat(catZEl.value); }
     }
 
+    window.updateCatYSlider = function(y) {
+        if (catYEl) catYEl.value = y.toFixed(2);
+        const val = _sliderVal('catY');
+        if (val) val.textContent = y.toFixed(2);
+    };
+
     if (catXEl) catXEl.addEventListener('input', syncCatSliders);
     if (catYEl) catYEl.addEventListener('input', syncCatSliders);
     if (catZEl) catZEl.addEventListener('input', syncCatSliders);
